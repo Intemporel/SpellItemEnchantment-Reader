@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QByteArray>
 
-enum STRUCT {
+enum STRUCT_SPELL_ITEM_ENCHANTMENT_READER {
     ID,
     CHARGES,
     SPELL_DISPEL_TYPE_1, // if SPELL_DISPEL_TYPE = 5 then OBJECT_ID is STAT_TYPE else SPELL_ID
@@ -30,12 +30,13 @@ enum STRUCT {
     REQUIRED_LEVEL
 };
 
+typedef enum STRUCT_SPELL_ITEM_ENCHANTMENT_READER SpellItemEnchantmentStructure;
+
 class spell_item_enchantment_reader : public QFile {
 public:
     spell_item_enchantment_reader(QString);
     QString reverseHex(QByteArray);
     quint32 strHexToUint32(QString hex) { return hex.toUInt(&ok, 16); };
-    quint32 ValueFrom(quint32 pos) { return strHexToUint32(reverseHex(buffer.mid(pos,LENGTH))); };
 
     QString Magic() { return magic; };
     quint32 Record_Count() { return record_count; };
@@ -44,6 +45,8 @@ public:
     quint32 String_Block_Size() { return string_block_size; };
 
     quint32 searchRecordByID(uint);
+    quint32 ValueFrom(quint32);;
+    quint32 ValueWhere(quint32, quint32);;
     QVector<quint32> getStatType(quint32);
 
     QByteArray * file;

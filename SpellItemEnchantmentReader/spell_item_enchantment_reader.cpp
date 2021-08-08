@@ -54,8 +54,16 @@ quint32 spell_item_enchantment_reader::searchRecordByID(uint valueToFound){
     return record;
 }
 
+quint32 spell_item_enchantment_reader::ValueFrom(quint32 pos) {
+    return strHexToUint32(reverseHex(buffer.mid(pos,LENGTH)));
+}
+
+quint32 spell_item_enchantment_reader::ValueWhere(quint32 record, quint32 field) {
+    return ValueFrom(HEADER_SIZE + (record*record_size) + (LENGTH*field));
+}
+
 QVector<quint32> spell_item_enchantment_reader::getStatType(quint32 record){
-    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*STRUCT::OBJECT_ID_1);
+    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*SpellItemEnchantmentStructure::OBJECT_ID_1);
     QVector<quint32> toReturn;
 
     for (int i = 0; i < 3; i ++) {

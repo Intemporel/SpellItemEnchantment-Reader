@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
 
         qDebug() << record;
 
+        qDebug() << data->ValueWhere(record, SpellItemEnchantmentStructure::MIN_AMOUNT_1);
+
         for (int i = 0; i <stat_type.size(); i++)
             qDebug() << stat_type[i];
     }
