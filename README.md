@@ -18,8 +18,8 @@ Now you can use some functions for getting data
 // return record position for corresponding parameters ID ( Unique ID fields 0 )
 // lang refer to your dbc loc, possibility of lang is contain in enum SpellItemEnchantmentStructure;
 // you can use like : 
-//                      SpellItemEnchantmentStructure::LANG_enUS
-//                      SpellItemEnchantmentStructure::LANG_frFR
+//                      SpellItemEnchantmentStructure::LANG_enUS or just LANG_enUS
+//                      SpellItemEnchantmentStructure::LANG_frFR or just LANG_frFR
 //                      ...
 quint32 searchRecordByID(uint ID, int lang);
 
