@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "spell_item_enchantment_reader.h"
+#include <SpellItemEnchantmentReader/spell_item_enchantment_reader.h>
 
 #include <QDebug>
 #include <QFile>
