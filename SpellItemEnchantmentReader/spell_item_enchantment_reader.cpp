@@ -31,10 +31,11 @@ spell_item_enchantment_reader::spell_item_enchantment_reader(QString file, int l
     record_size       = ValueFrom(LENGTH*3);
     string_block_size = ValueFrom(LENGTH*4);
 
+    GenerateStrSort();
+
     // only read dbc file
     if (magic.toStdString() != "WDBC")
         delete this;
-
 }
 
 QString spell_item_enchantment_reader::reverseHex(QByteArray bytes) {
@@ -50,7 +51,20 @@ QString spell_item_enchantment_reader::reverseHex(QByteArray bytes) {
     return reverse;
 }
 
-quint32 spell_item_enchantment_reader::searchRecordByID(uint valueToFound) {
+void spell_item_enchantment_reader::GenerateStrSort() {
+    quint32 pos;
+
+    for (quint32 i = 0; i < record_count ; i ++) {
+        pos = HEADER_SIZE + (i*record_size) + (LENGTH*LANG);
+
+        if (not str_sort.contains(ValueFrom(pos)))
+            str_sort << ValueFrom(pos);
+    }
+
+    std::sort(str_sort.begin(), str_sort.end());
+}
+
+quint32 spell_item_enchantment_reader::searchRecordByID(quint32 valueToFound) {
     quint32 record = 0;
     quint32 position;
 
@@ -116,10 +130,14 @@ QVector<QVector<quint32> > spell_item_enchantment_reader::getStatValue(quint32 r
 
 QString spell_item_enchantment_reader::getText(quint32 record) {
     quint32 position_start = HEADER_SIZE + (record*record_size) + (LENGTH*LANG);
-    quint32 position_end = position_start + record_size;
+    quint32 data_position_start = ValueFrom(position_start);
+    quint32 str_lenght;
 
-    quint32 str_lenght = ValueFrom(position_end)-ValueFrom(position_start);
-    str_lenght--;
+    quint32 str_at = str_sort.indexOf(data_position_start);
+    quint32 str_to = (str_at == str_sort.count()) ? String_Block_Size() : str_sort[str_at+1];
+    str_to--;
 
-   return buffer.mid(StringBlockStart()+ValueFrom(position_start), str_lenght);
+    str_lenght = str_to - str_sort[str_at];
+
+    return buffer.mid(StringBlockStart()+ValueFrom(position_start), str_lenght);
 }
