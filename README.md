@@ -17,6 +17,7 @@ Now you can use some functions for getting data
 ```cpp
 quint32 searchRecordByID(uint ID); // return record position for corresponding parameters ID ( Unique ID fields 0 )
 quint32 ValueFrom(quint32 pos); // return quint32 value from position in file ( 4 bytes )
+quint32 ValueWhere(quint32 record, quint32 field);; // return quint32 value from coord {record, field} in file ( 4 bytes ) 
 QVector<quint32> getStatType(quint32); // return array corresponding to fiels (11,12,13)
 ```
 
