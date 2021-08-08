@@ -42,7 +42,7 @@ QVector<QVector<quint32>> getStatValue(quint32 record);
 QString getText(quint32 record);
 ```
 
-And here there is an exemple 
+And here there is an simple exemple 
 
 ```cpp
 spell_item_enchantment_reader data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc");
