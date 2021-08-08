@@ -16,7 +16,12 @@ Now you can use some functions for getting data
 
 ```cpp
 // return record position for corresponding parameters ID ( Unique ID fields 0 )
-quint32 searchRecordByID(uint ID);
+// lang refer to your dbc loc, possibility of lang is contain in enum SpellItemEnchantmentStructure;
+// you can use like : 
+//                      SpellItemEnchantmentStructure::LANG_enUS
+//                      SpellItemEnchantmentStructure::LANG_frFR
+//                      ...
+quint32 searchRecordByID(uint ID, int lang);
 
 // return quint32 value from position in file ( 4 bytes )
 quint32 ValueFrom(quint32 pos);
@@ -37,5 +42,32 @@ QVector<QVector<quint32>> getStatValue(quint32 record);
 QString getText(quint32 record);
 ```
 
-I give you an exemple in the `main.cpp`, but for now, that script aren't allowed to extract string data.
-Enjoy.
+And here there is an exemple 
+
+```cpp
+    spell_item_enchantment_reader data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc");
+    quint32 record = data->searchRecordByID(266);
+    qDebug() << "Current cell [" << record << "]";
+
+    if (record) {
+        QVector<quint32> stat_key = data->getStatKey(record);
+        QVector<quint32> stat_type = data->getStatType(record);
+        QVector<QVector<quint32>> stat_value = data->getStatValue(record);
+
+        QString text = data->getText(record);
+        qDebug() << "String [" << text << "]";
+
+        for (int i = 0; i <stat_type.size(); i++)
+            qDebug() << "Key [" << stat_key[i] << "] : Type [" << stat_type[i] << "] : Min,Max - [" << stat_value[i][0] << "," << stat_value[i][1] << "]";
+    }
+
+/* RETURN :
+
+Current cell [ 242 ]
+String [ "Fishing Lure (+100 Fishing Skill)" ]
+Key [ 3 ] : Type [ 8085 ] : Min,Max - [ 0 , 0 ]
+Key [ 0 ] : Type [ 0 ] : Min,Max - [ 0 , 0 ]
+Key [ 0 ] : Type [ 0 ] : Min,Max - [ 0 , 0 ]
+
+*/
+```
