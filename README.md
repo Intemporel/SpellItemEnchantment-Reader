@@ -21,7 +21,7 @@ Now you can use some functions for getting data
 //                      SpellItemEnchantmentStructure::LANG_enUS or just LANG_enUS
 //                      SpellItemEnchantmentStructure::LANG_frFR or just LANG_frFR
 //                      ...
-quint32 searchRecordByID(uint ID, int lang);
+quint32 searchRecordByID(uint ID, int lang = LANG_enUS);
 
 // return quint32 value from position in file ( 4 bytes )
 quint32 ValueFrom(quint32 pos);
@@ -45,7 +45,7 @@ QString getText(quint32 record);
 And here there is an simple exemple 
 
 ```cpp
-spell_item_enchantment_reader data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc");
+spell_item_enchantment_reader data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc", LANG_enUS);
 quint32 record = data->searchRecordByID(266);
 
 qDebug() << "Current cell [" << record << "]";
