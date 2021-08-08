@@ -46,16 +46,16 @@ And here there is an simple exemple
 
 ```cpp
 spell_item_enchantment_reader data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc", LANG_enUS);
-quint32 record = data->searchRecordByID(266);
+quint32 record = data.searchRecordByID(266);
 
 qDebug() << "Current cell [" << record << "]";
 
 if (record) {
-    QVector<quint32> stat_key = data->getStatKey(record);
-    QVector<quint32> stat_type = data->getStatType(record);
-    QVector<QVector<quint32>> stat_value = data->getStatValue(record);
+    QVector<quint32> stat_key = data.getStatKey(record);
+    QVector<quint32> stat_type = data.getStatType(record);
+    QVector<QVector<quint32>> stat_value = data.getStatValue(record);
 
-    qDebug() << "String [" << data->getText(record); << "]";
+    qDebug() << "String [" << data.getText(record); << "]";
 
     for (int i = 0; i <stat_type.size(); i++)
         qDebug() << "Key [" << stat_key[i] << "] : Type [" << stat_type[i] << "] : Min,Max - [" << stat_value[i][0] << "," << stat_value[i][1] << "]";
