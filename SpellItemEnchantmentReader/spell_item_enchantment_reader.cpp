@@ -2,7 +2,17 @@
 #include <sstream>
 #include <iostream>
 
-spell_item_enchantment_reader::spell_item_enchantment_reader(QString file){
+spell_item_enchantment_reader::spell_item_enchantment_reader(QString file, int lang) {
+
+    // prevent lang out of range
+    if (lang < LANG_enUS or lang > LANG_UNK){
+        delete this;
+        return;
+    }
+
+    // set lang file
+    LANG=lang;
+
     // only read SpellItemEnchantment.dbc
     if (not file.contains("SpellItemEnchantment")) {
         delete this;
@@ -27,7 +37,7 @@ spell_item_enchantment_reader::spell_item_enchantment_reader(QString file){
 
 }
 
-QString spell_item_enchantment_reader::reverseHex(QByteArray bytes){
+QString spell_item_enchantment_reader::reverseHex(QByteArray bytes) {
     QString reverse;
     QString hex [4];
 
@@ -40,7 +50,7 @@ QString spell_item_enchantment_reader::reverseHex(QByteArray bytes){
     return reverse;
 }
 
-quint32 spell_item_enchantment_reader::searchRecordByID(uint valueToFound){
+quint32 spell_item_enchantment_reader::searchRecordByID(uint valueToFound) {
     quint32 record = 0;
     quint32 position;
 
@@ -55,21 +65,61 @@ quint32 spell_item_enchantment_reader::searchRecordByID(uint valueToFound){
 }
 
 quint32 spell_item_enchantment_reader::ValueFrom(quint32 pos) {
+    if (pos > (record_count*record_size+HEADER_SIZE)) return 0; //data out of range
+
     return strHexToUint32(reverseHex(buffer.mid(pos,LENGTH)));
 }
 
 quint32 spell_item_enchantment_reader::ValueWhere(quint32 record, quint32 field) {
+    if (record > record_count or field > field_count) return 0; //data out of range
+
     return ValueFrom(HEADER_SIZE + (record*record_size) + (LENGTH*field));
 }
 
-QVector<quint32> spell_item_enchantment_reader::getStatType(quint32 record){
-    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*SpellItemEnchantmentStructure::OBJECT_ID_1);
+QVector<quint32> spell_item_enchantment_reader::getStatKey(quint32 record) {
+    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*SPELL_DISPEL_TYPE_1);
     QVector<quint32> toReturn;
 
-    for (int i = 0; i < 3; i ++) {
+    for (int i = 0; i <= (SPELL_DISPEL_TYPE_3-SPELL_DISPEL_TYPE_1); i++) {
         toReturn.push_back(ValueFrom(position));
-        position+=4;
+        position+=LENGTH;
     }
 
     return toReturn;
+}
+
+QVector<quint32> spell_item_enchantment_reader::getStatType(quint32 record) {
+    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*OBJECT_ID_1);
+    QVector<quint32> toReturn;
+
+    for (int i = 0; i <= (OBJECT_ID_3-OBJECT_ID_1); i ++) {
+        toReturn.push_back(ValueFrom(position));
+        position+=LENGTH;
+    }
+
+    return toReturn;
+}
+
+QVector<QVector<quint32> > spell_item_enchantment_reader::getStatValue(quint32 record) {
+    quint32 position = HEADER_SIZE + (record*record_size) + (LENGTH*MIN_AMOUNT_1);
+    QVector<QVector<quint32>> toReturn;
+        QVector<quint32> subArray;
+
+        for (int i = 0; i <= (MIN_AMOUNT_3-MIN_AMOUNT_1); i ++) {
+            subArray = {ValueFrom(position), ValueFrom((position+LENGTH*3))};
+            toReturn.push_back(subArray);
+            position+=LENGTH;
+        }
+
+        return toReturn;
+}
+
+QString spell_item_enchantment_reader::getText(quint32 record) {
+    quint32 position_start = HEADER_SIZE + (record*record_size) + (LENGTH*LANG);
+    quint32 position_end = position_start + record_size;
+
+    quint32 str_lenght = ValueFrom(position_end)-ValueFrom(position_start);
+    str_lenght--;
+
+   return buffer.mid(StringBlockStart()+ValueFrom(position_start), str_lenght);
 }

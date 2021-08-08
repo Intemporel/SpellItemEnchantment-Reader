@@ -20,8 +20,24 @@ enum STRUCT_SPELL_ITEM_ENCHANTMENT_READER {
     OBJECT_ID_1,
     OBJECT_ID_2,
     OBJECT_ID_3,
-    //15-31 	sRefName 				String+Loc	The name of the enchantment
-    ITEM_VISUAL = 31,
+    LANG_enUS,
+    LANG_enGB,
+    LANG_koKR,
+    LANG_frFR,
+    LANG_deDE,
+    LANG_enCN,
+    LANG_zhCN,
+    LANG_enTW,
+    LANG_zhTW,
+    LANG_esES,
+    LANG_esMX,
+    LANG_ruRU,
+    LANG_ptPT,
+    LANG_ptBR,
+    LANG_itIT,
+    LANG_UNK,
+    LANG_MASK,
+    ITEM_VISUAL,
     FLAGS,
     ITEM_CACHE,
     SPELL_ITEM_ENCHANTMENT_CONDITION,
@@ -34,7 +50,7 @@ typedef enum STRUCT_SPELL_ITEM_ENCHANTMENT_READER SpellItemEnchantmentStructure;
 
 class spell_item_enchantment_reader : public QFile {
 public:
-    spell_item_enchantment_reader(QString);
+    spell_item_enchantment_reader(QString, int lang=LANG_enUS);
     QString reverseHex(QByteArray);
     quint32 strHexToUint32(QString hex) { return hex.toUInt(&ok, 16); };
 
@@ -44,13 +60,19 @@ public:
     quint32 Record_Size() { return record_size; };
     quint32 String_Block_Size() { return string_block_size; };
 
+    quint32 StringBlockStart() { return (size() - String_Block_Size());};
+
     quint32 searchRecordByID(uint);
-    quint32 ValueFrom(quint32);;
-    quint32 ValueWhere(quint32, quint32);;
+    quint32 ValueFrom(quint32);
+    quint32 ValueWhere(quint32, quint32);
+    QVector<quint32> getStatKey(quint32);
     QVector<quint32> getStatType(quint32);
+    QVector<QVector<quint32>> getStatValue(quint32);
+    QString getText(quint32);
 
     QByteArray * file;
     QByteArray buffer;
+    int LANG;
     bool ok = false;
 
     // HEADER

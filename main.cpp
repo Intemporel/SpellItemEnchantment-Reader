@@ -13,17 +13,18 @@ int main(int argc, char *argv[])
 
 
     data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc");
-    quint32 record = data->searchRecordByID(3402);
+    quint32 record = data->searchRecordByID(3801);
 
     if (record) {
+        QVector<quint32> stat_key = data->getStatKey(record);
         QVector<quint32> stat_type = data->getStatType(record);
+        QVector<QVector<quint32>> stat_value = data->getStatValue(record);
 
-        qDebug() << record;
-
-        qDebug() << data->ValueWhere(record, SpellItemEnchantmentStructure::MIN_AMOUNT_1);
+        QString text = data->getText(record);
+        qDebug() << text;
 
         for (int i = 0; i <stat_type.size(); i++)
-            qDebug() << stat_type[i];
+            qDebug() << "Key [" << stat_key[i] << "] : Type [" << stat_type[i] << "] : Min,Max - [" << stat_value[i][0] << "," << stat_value[i][1] << "]";
     }
 
 
