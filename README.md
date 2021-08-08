@@ -24,8 +24,6 @@ quint32 ValueFrom(quint32 pos);
 // return quint32 value from coord {record, field} in file ( 4 bytes )
 quint32 ValueWhere(quint32 record, quint32 field);
 
-// (you can use searchRecordByID with ID)
-
 // return array corresponding to fiels (2,3,4) in the record index
 QVector<quint32> getStatKey(quint32 record );
 
