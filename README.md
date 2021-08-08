@@ -23,10 +23,10 @@ Now you can use some functions for getting data
 //                      ...
 quint32 searchRecordByID(uint ID, int lang = LANG_enUS);
 
-// return quint32 value from position in file ( 4 bytes )
+// return quint32 value from position in file
 quint32 ValueFrom(quint32 pos);
 
-// return quint32 value from coord {record, field} in file ( 4 bytes )
+// return quint32 value where ceil = {record, field}
 quint32 ValueWhere(quint32 record, quint32 field);
 
 // return array corresponding to fiels (2,3,4) in the record index
