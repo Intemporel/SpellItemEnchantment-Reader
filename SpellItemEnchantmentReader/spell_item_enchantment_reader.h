@@ -68,7 +68,6 @@ public:
     QVector<quint32> getStatType(quint32);
     QVector<QVector<quint32>> getStatValue(quint32);
     QString getText(quint32);
-    quint32 searchFirstOccurenceOfStr(quint32);
 
 private:
     void GenerateStrSort();
