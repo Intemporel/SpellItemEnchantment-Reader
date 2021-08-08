@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/dbc">
-        <file>SpellItemEnchantment.dbc</file>
+    <qresource prefix="/binary">
+        <file>dbc/enUS/SpellItemEnchantment.dbc</file>
     </qresource>
 </RCC>
