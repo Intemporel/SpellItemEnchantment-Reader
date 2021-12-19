@@ -52,7 +52,7 @@ typedef enum STRUCT_SPELL_ITEM_ENCHANTMENT_READER SpellItemEnchantmentStructure;
 
 class spell_item_enchantment_reader : public QFile {
 public:
-    spell_item_enchantment_reader(QString, int lang=LANG_enUS);
+    spell_item_enchantment_reader(QString);
 
     QString Magic() { return magic; };
     quint32 Record_Count() { return record_count; };

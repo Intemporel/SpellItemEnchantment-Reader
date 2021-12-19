@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
 
-    data = new spell_item_enchantment_reader(":/binary/dbc/enUS/SpellItemEnchantment.dbc");
-    quint32 record = data->searchRecordByID(266);
+    data = new spell_item_enchantment_reader(":/binary/dbc/frFR/SpellItemEnchantment.dbc");
+    quint32 record = data->searchRecordByID(591);
     qDebug() << "Current cell [" << record << "]";
 
     if (record) {

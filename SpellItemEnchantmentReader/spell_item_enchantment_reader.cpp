@@ -2,16 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-spell_item_enchantment_reader::spell_item_enchantment_reader(QString file, int lang) {
-
-    // prevent lang out of range
-    if (lang < LANG_enUS or lang > LANG_UNK){
-        delete this;
-        return;
-    }
-
-    // set lang file
-    LANG=lang;
+spell_item_enchantment_reader::spell_item_enchantment_reader(QString file) {
 
     // only read SpellItemEnchantment.dbc
     if (not file.contains("SpellItemEnchantment")) {
@@ -55,10 +46,16 @@ void spell_item_enchantment_reader::GenerateStrSort() {
     quint32 pos;
 
     for (quint32 i = 0; i < record_count ; i ++) {
-        pos = HEADER_SIZE + (i*record_size) + (LENGTH*LANG);
+        for (quint32 lc = LANG_enUS; lc <= LANG_UNK; ++ lc)
+        {
+            pos = HEADER_SIZE + (i*record_size) + (LENGTH*lc);
 
-        if (not str_sort.contains(ValueFrom(pos)))
-            str_sort << ValueFrom(pos);
+            if (not str_sort.contains(ValueFrom(pos)))
+            {
+                LANG = lc;
+                str_sort << ValueFrom(pos);
+            }
+        }
     }
 
     std::sort(str_sort.begin(), str_sort.end());
@@ -131,6 +128,7 @@ QVector<QVector<quint32> > spell_item_enchantment_reader::getStatValue(quint32 r
 QString spell_item_enchantment_reader::getText(quint32 record) {
     quint32 position_start = HEADER_SIZE + (record*record_size) + (LENGTH*LANG);
     quint32 data_position_start = ValueFrom(position_start);
+    qDebug() << ValueFrom(position_start);
     quint32 str_lenght;
 
     quint32 str_at = str_sort.indexOf(data_position_start);
